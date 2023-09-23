@@ -1,23 +1,23 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-export const checkAuth = (res, req, next) => {
+export const checkAuth = (req, res, next) => {    
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
 
-    if (token) {
+    if(token) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET); // расшифровка токена
 
-            req.userId = decoded.id;
+            req.userId = decoded.id
 
             next();
-        } catch (error) {
-            res.json({
+        } catch (e) {
+            return res.json({
                 message: `No access, error is ${error}`
             })
         }
     } else {
-        res.json({
-            message: "No access"
+        return res.json({
+            message: 'No access'
         })
     }
 }

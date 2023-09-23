@@ -13,7 +13,7 @@ router.post('/register', register);
 router.post('/login', login);
 
 // getMe
-// http://localhost:3001/auth/getMe
-router.post('/me', checkAuth, getMe);
+// http://localhost:3001/api/auth/getMe
+router.get('/me', checkAuth, getMe);
 
 export default router;

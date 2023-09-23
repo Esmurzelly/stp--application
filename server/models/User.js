@@ -18,7 +18,13 @@ const UserSchema = new mongoose.Schema(
         city: {
             type: String,
             required: true,
-        }
+        },
+        markers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Marker'
+            }
+        ]
     }, 
     { timestamps: true }
 );

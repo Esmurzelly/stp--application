@@ -87,24 +87,23 @@ export const getMe = async (req, res) => {
     const user = await User.findById(req.userId);
 
     if (!user) {
-      return res.json({
-        message: 'This user does not exist.',
-      });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     const token = jwt.sign(
-        {
-            id: user._id,
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: '30d' }
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
     );
 
     res.json({
-        user,
-        token
-    })
+      user,
+      token,
+    });
   } catch (error) {
-    res.json({ message: `No access, error is ${error}` });
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
