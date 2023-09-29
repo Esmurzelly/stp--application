@@ -2,15 +2,16 @@ import mongoose from "mongoose";
 
 const MarkerSchema = new mongoose.Schema(
     {
-        markerName: {type: String},
         category: {type: String},
         description: {type: String},
         position: {
             type: [Number],
             index: '2dsphere',
-        }
+        },
+        metres: {type: Number},
+        author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        // imgUrl: { type: String, default: '' }
         // username: {type: String},
-        // author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
     },
     { timestamps: true }
 );

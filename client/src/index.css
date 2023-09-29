@@ -3,3 +3,8 @@
 @tailwind utilities;
 
 @import 'leaflet/dist/leaflet.css';
+
+.leaflet-bottom,
+.leaflet-left {
+  display: none;
+}

@@ -12,14 +12,18 @@ export const registerUser = createAsyncThunk(
     'auth/registerUser',
     async ({ email, password, fullName, city }) => {
         try {
-            const {data} = await axios.post('/auth/register', {
+            const { data } = await axios.post('/auth/register', {
                 email,
                 password,
                 fullName,
                 city
+            }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
             });
 
-            if(data.token) {
+            if (data.token) {
                 window.localStorage.setItem('token', data.token);
             }
 
@@ -33,22 +37,22 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async ({ email, password }) => {
-      try {
-        const { data } = await axios.post('auth/login', {
-          email,
-          password,
-        });
+        try {
+            const { data } = await axios.post('auth/login', {
+                email,
+                password,
+            });
 
-        if (data.token) {
-          window.localStorage.setItem('token', data.token);
+            if (data.token) {
+                window.localStorage.setItem('token', data.token);
+            }
+
+            return data;
+        } catch (error) {
+            console.log(error)
         }
-
-        return data;
-      } catch (error) {
-        console.log(error)
-      }
     }
-  );
+);
 
 // export const loginUser = createAsyncThunk(
 //     'login/loginUser',
@@ -62,7 +66,7 @@ export const loginUser = createAsyncThunk(
 //             if(data.token) {
 //                 window.localStorage.setItem('token', data.token);
 //             }
-            
+
 //             return data;
 //         } catch (error) {
 //             console.log(error);
@@ -82,9 +86,21 @@ export const getMe = createAsyncThunk(
     }
 )
 
+export const editUserProfile = (updatedProfile) => async (dispatch) => {
+    try {
+        const response = await axios.put('auth/', updatedProfile);
+
+        dispatch({ type: 'EDIT_PROFILE_SUCCESS', payload: response.data });
+    } catch (error) {
+        console.error('Error:', error);
+        dispatch({ type: 'EDIT_PROFILE_ERROR', payload: error.message });
+    }
+};
+
+
 export const authSlice = createSlice({
     name: 'auth',
-    initialState, 
+    initialState,
     reducers: {
         logOut: state => {
             state.user = null;
@@ -131,13 +147,28 @@ export const authSlice = createSlice({
             state.isLoading = true;
             state.status = null;
         },
-        [getMe.fulfilled]: (state ,action)=>{
+        [getMe.fulfilled]: (state, action) => {
             state.isLoading = false;
             state.status = null;
             state.user = action.payload?.user;
             state.token = action.payload?.token;
         },
         [getMe.rejected]: (state, action) => {
+            state.isLoading = false;
+            state.status = action.payload ? action.payload.message : "Error occurred";
+        },
+
+        [editUserProfile.pending]: state => {
+            state.isLoading = true;
+            state.status = null;
+        },
+        [editUserProfile.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.status = null;
+            state.user = action.payload?.user;
+            state.token = action.payload?.token;
+        },
+        [editUserProfile.rejected]: (state, action) => {
             state.isLoading = false;
             state.status = action.payload ? action.payload.message : "Error occurred";
         }

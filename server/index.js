@@ -3,9 +3,15 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import authRoute from './routes/auth.js'
 import markersRoute from './routes/marker.js'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 dotenv.config();
@@ -16,15 +22,16 @@ const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = DB_PASSWORD.DB_NAME;
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // Замените на адрес вашего клиентского приложения
+  origin: 'http://localhost:3000',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Если вы используете сессии или куки
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
 app.use(fileUpload());
 app.use(express.json());
 app.use(express.static('uploads'));
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 app.use('/api/auth', authRoute);
 app.use('/api/markers', markersRoute);

@@ -4,26 +4,30 @@ import Marker from "../models/Marker.js";
 // create marker
 export const createMarker = async (req, res) => {
     try {
-        const { markerName, category, description, position } = req.body;
-        // const user = await User.findById(req.userId);
+        const { category, description, metres } = req.body;
+        const position = JSON.parse(req.body.position);
 
-        // if (!user) {
-        //     return res.status(404).json({ message: `Пользователь не найден, user is ${user}` });
-        // }
+        if (!category || !description || !position || !metres) {
+            console.log('Missing required fields:', { category, description, position, metres }); 
+            return res.status(404).json({ message: "fields are not found!" });
+        }
+
+        console.log({ category, description, position, metres }); 
 
         const newMarker = new Marker({
-            markerName,
             category,
             description,
-            position
-            // username: user.fullName,
-            // author: req.userId,
+            position,
+            author: req.userId,
+            metres,
+            // createdAt
+            // imgUrl: ''
         });
 
         await newMarker.save();
-        await User.findByIdAndUpdate(req.userId, {
-            $push: { markers: newMarker },
-        });
+
+        console.log('newMarker', newMarker);
+        console.log('req.userId', req.userId);
 
         res.json(newMarker);
     } catch (e) {
@@ -84,13 +88,13 @@ export const removeMarker = async (req, res) => {
             return res.status(404).json({ message: 'Такого маркера не существует' });
         }
 
+        if (marker.author.toString() !== req.userId) {
+            console.log('can not to delete')
+            return res.status(403).json({ message: 'You are not authorized to delete this marker' })
+        }
+
         // Попробуйте удалить маркер
         await Marker.findByIdAndDelete(markerId);
-
-        // Удалите маркер из списка маркеров пользователя
-        await User.findByIdAndUpdate(req.userId, {
-            $pull: { markers: markerId },
-        });
 
         res.json({ message: 'Marker был удален.' });
     } catch (e) {

@@ -6,11 +6,10 @@ export const checkAuth = (req, res, next) => {
     if(token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET); // расшифровка токена
-
-            req.userId = decoded.id
+            req.userId = decoded.id;
 
             next();
-        } catch (e) {
+        } catch (error) {
             return res.json({
                 message: `No access, error is ${error}`
             })

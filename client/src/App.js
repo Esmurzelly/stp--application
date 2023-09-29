@@ -12,6 +12,7 @@ import { checkIsAuth, getMe } from './redux/features/authSlice';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NotFound from './pages/NotFound';
 
 function App() {
   const dispatch = useDispatch();
@@ -22,18 +23,17 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Layout>
       <Routes>
-        {isAuth ? 
+        {isAuth ?
           <Route path="/" element={<Home />} />
           :
           <Route path="/" element={<Login />} />
         }
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Registration />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-      <ToastContainer position='bottom-right' />
-    </Layout>
+
   );
 }
 

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
     {
@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema(
         email: {
             type: String,
             required: true,
-            unique: true
+            unique: true,
         },
         passwordHash: {
             type: String,
@@ -19,13 +19,7 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        markers: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Marker'
-            }
-        ]
-    }, 
+    },
     { timestamps: true }
 );
 

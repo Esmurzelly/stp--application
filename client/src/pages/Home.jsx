@@ -1,54 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from '../redux/features/authSlice';
+import { logOut, getMe } from '../redux/features/authSlice';
 import { toast } from 'react-toastify';
 import Map from '../components/Map';
-
 import { getAllMarkers } from '../redux/features/markerSlice';
 import ModalWindow from '../components/ModalWindow';
 import { Link } from 'react-router-dom';
+import NearMarkers from '../components/NearMarkers';
+import { useMapEvent } from 'react-leaflet';
+import UserProfile from '../components/UserProfile';
+import { Bars3Icon } from '@heroicons/react/24/solid';
+
 
 const Home = () => {
-    const dispatch = useDispatch();
-    const [openModal, setOpenModal] = useState(false);
-
-    const handleChangeModal = () => {
-        setOpenModal(prev => !prev)
-    }
-
     const { user } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
 
-    const handleLogOut = () => {
-        dispatch(logOut());
-        window.localStorage.removeItem('token');
-        toast('Вы вышли из системы');
-    }
+    const [userLocation, setUserLocation] = useState(null);
+    const [loadingUser, setLoadingUser] = useState(true);
+    const [selectedMarkerPosition, setSelectedMarkerPosition] = useState(null);
+    const [openModal, setOpenModal] = useState(true);
+
+    const [showMenu, setShowMenu] = useState(false);
+
+    const handleMarkerClick = (position) => {
+        setSelectedMarkerPosition(position);
+    };
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setUserLocation([latitude, longitude])
+                },
+                (error) => {
+                    console.error('Error getting user location:', error);
+                }
+            )
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+
+        dispatch(getMe())
+        setLoadingUser(false);
+    }, []);
+
+
     return (
         <div>
-            <h1>Home</h1>
-            <div>
-                <button onClick={handleChangeModal}>Open Modal</button>
-                {
-                    openModal && (
-                        <ModalWindow handleChangeModal={handleChangeModal} />
-                    )
-                }
-            </div>
-
-            <div className='w-full h-[700px]'>
-                <Map />
-            </div>
-
-            {user && (
-                <ul>
-                    <li>Name: {user?.fullName}</li>
-                    <li>Email: {user?.email}</li>
-                    <li>City: {user?.city}</li>
-                </ul>
+            {openModal ? (
+                <ModalWindow userLocation={userLocation} />
+            ) : (
+                <NearMarkers userLocation={userLocation} onMarkerClick={handleMarkerClick} />
             )}
 
+            <div className='w-full h-full relative'>
+                <Bars3Icon onClick={() => setShowMenu(prev => !prev)} className='absolute z-40 w-8 h-w-8 right-3 top-3' />
+                <Map userLocation={userLocation} selectedMarkerPosition={selectedMarkerPosition} setOpenModal={setOpenModal} />
+            </div>
 
-            <Link to={`/login`} onClick={handleLogOut}>Log out</Link>
+
+            {loadingUser ? (
+                <p>Loading user data...</p>
+            ) : (
+                user && (
+                    <UserProfile user={user} showMenu={showMenu} setShowMenu={setShowMenu} />
+                )
+            )}
         </div>
     )
 }
