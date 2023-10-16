@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom';
-import Layout from './components/Layout';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -10,8 +9,6 @@ import { useEffect } from 'react';
 
 import { checkIsAuth, getMe } from './redux/features/authSlice';
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -24,10 +21,9 @@ function App() {
 
   return (
       <Routes>
-        {isAuth ?
-          <Route path="/" element={<Home />} />
-          :
-          <Route path="/" element={<Login />} />
+        {isAuth 
+          ? <Route path="/" element={<Home />} />
+          : <Route path="/" element={<Login />} />
         }
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Registration />} />

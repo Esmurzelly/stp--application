@@ -1,30 +1,26 @@
-import { MapContainer, Popup, TileLayer, Marker, LayerGroup, Circle, LayersControl, FeatureGroup, Rectangle } from 'react-leaflet';
-import { ArchiveBoxArrowDownIcon } from '@heroicons/react/24/solid';
-import L, { map } from 'leaflet';
-// import redMarker from '../assets/markers/red_marker.png';
-// import blueMarker from '../assets/markers/blue_marker.png';
-// import greenMarker from '../assets/markers/green_marker.png';
+import { useCallback, useRef, useEffect } from 'react';
 
-import redMarker from '../assets/markers/red_marker.svg';
-import blueMarker from '../assets/markers/blue_marker.svg';
-import greenMarker from '../assets/markers/green_marker.svg';
-import purpleMarker from '../assets/markers/purple_marker.svg';
-import yellowMarker from '../assets/markers/yellow_marker.svg';
-import userMarker from '../assets/markers/user_marker.svg';
-
-
-import myGeo from '../assets/main/myGeo.svg';
-import showMarkers from '../assets/main/showMarkers.svg';
-import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllMarkers } from '../redux/features/markerSlice';
-import { useCallback, useRef } from 'react';
+
 import NewMarker from './NewMarker';
+
+import { useTranslation } from 'react-i18next';
+
+import L from 'leaflet';
+import { MapContainer, Popup, TileLayer, Marker, LayersControl } from 'react-leaflet';
+
+import userMarker from '../assets/markers/user_marker.svg';
+import myGeo from '../assets/main/myGeo.svg';
+import showMarkers from '../assets/main/showMarkers.svg';
+
 
 const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
     const dispatch = useDispatch();
     const { currentMarkers } = useSelector(state => state.markers);
     const mapRef = useRef();
+
+    const { t } = useTranslation();
 
     const fetchMarkers = useCallback(async () => {
         try {
@@ -86,7 +82,7 @@ const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
                     iconSize: [40, 40],
                     iconAnchor: [16, 32],
                 })}>
-                    <Popup>Ваше местоположение</Popup>
+                    <Popup>{t('YourLocation')}</Popup>
                 </Marker>
 
                 <LayersControl position='bottomleft'>

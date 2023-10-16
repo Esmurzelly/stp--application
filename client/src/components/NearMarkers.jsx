@@ -1,36 +1,22 @@
 import React, { useState, useEffect } from 'react';
+
 import { useSelector } from 'react-redux';
 
-import comment from '../assets/main/comment.svg';
+import { useTranslation } from 'react-i18next';
 
+import { calculateDistance } from '../utils/calculateDistance';
+
+import comment from '../assets/main/comment.svg';
 import redEllipse from '../assets/ellipses/red_ellipse.svg';
 import blueEllipse from '../assets/ellipses/blue_ellipse.svg';
 import greenEllipse from '../assets/ellipses/green_ellipse.svg';
 import purpleEllipse from '../assets/ellipses/purple_ellipse.svg';
 import yellowEllipse from '../assets/ellipses/yellow_ellipse.svg';
 
-function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Радиус Земли в километрах
-    const dLat = (lat2 - lat1) * (Math.PI / 180); // Разница широт в радианах
-    const dLon = (lon2 - lon1) * (Math.PI / 180); // Разница долгот в радианах
-
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * (Math.PI / 180)) *
-        Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distance = R * c * 1000; // Расстояние в метрах
-
-    return distance;
-}
-
 const NearMarkers = ({ userLocation, onMarkerClick }) => {
     const { currentMarkers } = useSelector(state => state.markers);
     const [distance, setDistance] = useState([]);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (userLocation && userLocation.length === 2) {
@@ -52,16 +38,15 @@ const NearMarkers = ({ userLocation, onMarkerClick }) => {
 
     const markerCount = distance.filter(dist => dist <= 10000).length;
 
-
-    function getMarkerCountText(markerCount) {
+    const getMarkerCountText = (markerCount) => {
         if (markerCount === 1) {
-            return `${markerCount} метка рядом`;
+            return `${markerCount} ${t('oneMarker')}`;
         } else if (markerCount >= 2 && markerCount <= 4) {
-            return `${markerCount} метки рядом`;
+            return `${markerCount} ${t('twoMarkers')}`;
         } else {
-            return `${markerCount} меток рядом`;
+            return `${markerCount} ${t('threeMarker3')}`;
         }
-    }
+    };
 
     return (
         <div
@@ -99,7 +84,7 @@ const NearMarkers = ({ userLocation, onMarkerClick }) => {
                                                                 marker.category === "Проблемы с инфраструктура" ? blueEllipse :
                                                                     marker.category === "Авария" ? greenEllipse :
                                                                         redEllipse
-                                                } alt="" />
+                                                } alt="danger_circle" />
                                             </div>
                                         </div>
                                         <div className="grid-item row-start-2 row-end-3 col-span-4">
@@ -112,7 +97,7 @@ const NearMarkers = ({ userLocation, onMarkerClick }) => {
                                 </li>
                             );
                         } else {
-                            <p>Меток поблизости нет</p>;
+                            <p>{t('NoMarkers')}</p>;
                         }
                     })}
                 </ul>

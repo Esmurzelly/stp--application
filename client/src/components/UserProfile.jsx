@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
-import { editUserProfile, logOut } from '../redux/features/authSlice';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { XMarkIcon } from '@heroicons/react/24/solid';
 
-import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+
+import { useDispatch } from 'react-redux';
+import { editUserProfile, logOut } from '../redux/features/authSlice';
+
+import { useTranslation } from 'react-i18next';
+
+import ChangeLanguage from './ChangeLanguage';
 
 import logo from '../assets/main/Logo.svg';
 import avatar_registration from '../assets/main/avatar_registration.svg';
 import changeInfo from '../assets/main/changeInfo.svg';
+
+import { XMarkIcon } from '@heroicons/react/24/solid';
 
 import { toast } from 'react-toastify';
 
@@ -20,6 +25,8 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
     const [changeClickFullName, setChangeClickFullName] = useState(false);
     const [changeClickEmail, setChangeClickEmail] = useState(false);
     const [changeClickCity, setChangeClickCity] = useState(false);
+
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
@@ -36,7 +43,7 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
     const handleLogOut = () => {
         dispatch(logOut());
         window.localStorage.removeItem('token');
-        toast('Вы вышли из аккаунта');
+        toast(t('YouLeftFromAccount'));
     }
 
     return (
@@ -52,15 +59,15 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
 
             <div className="flex flex-1 pb-28 text-center w-full">
                 <form className='flex flex-col gap-7 justify-center items-center w-full' onSubmit={handleSubmit}>
-                    <h1>Профиль</h1>
+                    <h1>{t('Profile')}</h1>
 
                     <img className='w-32 h-3w-32' src={avatar_registration} alt="avatar_registration" />
 
                     <ul className='text-light-gray text-left mx-auto flex flex-col gap-2 w-[80%]'>
                         <li className='flex gap-2 items-center'>
-                            <span>Имя: </span>
+                            <span>{t('Name')}: </span>
                             {changeClickFullName ? (
-                                <input type="text" defaultValue="" placeholder='Введите новое имя' onChange={e => setFullName(e.target.value)} name="" id="" />
+                                <input type="text" defaultValue="" placeholder={t('EnterName')} onChange={e => setFullName(e.target.value)} name="" id="" />
                             ) : (
                                 <>
                                     <span>{user.fullName}</span>
@@ -70,9 +77,9 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
                         </li>
 
                         <li className='flex gap-2 items-center'>
-                            <span>Email: </span>
+                            <span>{t('Email')}: </span>
                             {changeClickEmail ? (
-                                <input type="email" defaultValue="" placeholder='Введите новый email' onChange={e => setEmail(e.target.value)} name="" id="" />
+                                <input type="email" defaultValue="" placeholder={t('EnterEmail')} onChange={e => setEmail(e.target.value)} name="" id="" />
                             ) : (
                                 <>
                                     <span>{user.email}</span>
@@ -83,9 +90,9 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
 
 
                         <li className='flex gap-2 items-center'>
-                            <span>Город: </span>
+                            <span>{t('City')}: </span>
                             {changeClickCity ? (
-                                <input type="text" defaultValue="" placeholder='Введите новый город' onChange={e => setCity(e.target.value)} name="" id="" />
+                                <input type="text" defaultValue="" placeholder={t('EnterCity')} onChange={e => setCity(e.target.value)} name="" id="" />
                             ) : (
                                 <>
                                     <span>{user.city}</span>
@@ -99,9 +106,12 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
                         <button
                             type="submit"
                             className='text-xl px-8 py-[6px] text-white bg-medium-blue'
-                        >Сохранить изменения</button>
-                        <Link className='text-xl px-8 py-[6px] text-white bg-medium-blue' to={`/login`} onClick={handleLogOut}>Выйти</Link>
+                        >{t('SaveChanges')}
+                        </button>
+                        <Link className='text-xl px-8 py-[6px] text-white bg-medium-blue' to={`/login`} onClick={handleLogOut}>{t('LogOut')}</Link>
                     </div>
+
+                    <ChangeLanguage />
                 </form>
             </div>
 

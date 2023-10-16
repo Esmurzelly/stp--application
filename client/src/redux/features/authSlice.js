@@ -54,26 +54,6 @@ export const loginUser = createAsyncThunk(
     }
 );
 
-// export const loginUser = createAsyncThunk(
-//     'login/loginUser',
-//     async ({ email, password }) => {
-//         try {
-//             const { data } = await axios.post('/auth/login', {
-//                 email,
-//                 password,
-//             });
-
-//             if(data.token) {
-//                 window.localStorage.setItem('token', data.token);
-//             }
-
-//             return data;
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     }
-// );
-
 export const getMe = createAsyncThunk(
     'auth/loginUser',
     async () => {

@@ -1,23 +1,29 @@
-import React, { useState } from 'react'
-import axios from '../utils/axios';
-import { Popup, Circle, LayersControl, FeatureGroup, Marker } from 'react-leaflet';
-import L, { map } from 'leaflet';
+import React, { useState } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { removeMarker } from '../redux/features/markerSlice';
+
+import L from 'leaflet';
+import { Popup, Circle, LayersControl, FeatureGroup, Marker } from 'react-leaflet';
+
+import axios from '../utils/axios';
 
 import redMarker from '../assets/markers/red_marker.svg';
 import blueMarker from '../assets/markers/blue_marker.svg';
 import greenMarker from '../assets/markers/green_marker.svg';
 import purpleMarker from '../assets/markers/purple_marker.svg';
 import yellowMarker from '../assets/markers/yellow_marker.svg';
-import userMarker from '../assets/markers/user_marker.svg';
 
 import Moment from 'react-moment';
+
+import { useTranslation } from 'react-i18next';
 
 const NewMarker = ({ _id, category, description, position, metres, author, createdAt }) => {
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.auth);
     const [isFront, setIsFront] = useState(false);
+
+    const { t } = useTranslation();
 
     const handleRemoveMarker = async () => {
         try {
@@ -56,12 +62,12 @@ const NewMarker = ({ _id, category, description, position, metres, author, creat
             }}>
                 <Popup>
                     <div className='w-full h-full flex flex-col gap-2 items-start'>
-                        <span>Категория: {category}</span>
-                        <span className='break-words'> Описание: {description}</span>
-                        <span>Метка была поставлена: <Moment date={createdAt} format='D.MM.YYYY, HH:mm' /> <br /></span>
+                        <span>{t('Category')}: {category}</span>
+                        <span className='break-words'> {t('Description')}: {description}</span>
+                        <span>{t('MarkWasAdded')}: <Moment date={createdAt} format='D.MM.YYYY, HH:mm' /> <br /></span>
 
                         {user && user._id === author && (
-                            <button className='bg-light-blue text-white px-2 py-1 rounded-md' onClick={handleRemoveMarker}>Удалить</button>
+                            <button className='bg-light-blue text-white px-2 py-1 rounded-md' onClick={handleRemoveMarker}>{t("Delete")}</button>
                         )}
                     </div>
 

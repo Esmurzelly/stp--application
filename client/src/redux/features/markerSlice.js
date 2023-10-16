@@ -55,7 +55,6 @@ export const markerSlice = createSlice({
     [createMarker.fulfilled]: (state, action) => {
       state.loading = false;
       state.markers.push(action.payload);
-      // state.currentMarkers.push(action.payload);
     },
     [createMarker.rejected]: state => {
       state.loading = false;
@@ -66,8 +65,8 @@ export const markerSlice = createSlice({
     },
     [getAllMarkers.fulfilled]: (state, action) => {
       state.loading = false;
-      state.markers = action.payload.markers; // Переменная с сервера "markers"
-      state.currentMarkers = action.payload.currentMarkers; // Переменная с сервера "currentMarkers"
+      state.markers = action.payload.markers;
+      state.currentMarkers = action.payload.currentMarkers;
     },
     [getAllMarkers.rejected]: state => {
       state.loading = false;

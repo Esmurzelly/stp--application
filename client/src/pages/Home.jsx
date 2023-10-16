@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { logOut, getMe } from '../redux/features/authSlice';
-import { toast } from 'react-toastify';
-import Map from '../components/Map';
-import { getAllMarkers } from '../redux/features/markerSlice';
-import ModalWindow from '../components/ModalWindow';
-import { Link } from 'react-router-dom';
-import NearMarkers from '../components/NearMarkers';
-import { useMapEvent } from 'react-leaflet';
-import UserProfile from '../components/UserProfile';
-import { Bars3Icon } from '@heroicons/react/24/solid';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { getMe } from '../redux/features/authSlice';
+
+import Map from '../components/Map';
+import ModalWindow from '../components/ModalWindow';
+import NearMarkers from '../components/NearMarkers';
+import UserProfile from '../components/UserProfile';
+
+import { useTranslation } from 'react-i18next';
+
+import { Bars3Icon } from '@heroicons/react/24/solid';
 
 const Home = () => {
     const { user } = useSelector(state => state.auth);
@@ -22,6 +22,8 @@ const Home = () => {
     const [openModal, setOpenModal] = useState(true);
 
     const [showMenu, setShowMenu] = useState(false);
+
+    const { t } = useTranslation();
 
     const handleMarkerClick = (position) => {
         setSelectedMarkerPosition(position);
@@ -62,7 +64,7 @@ const Home = () => {
 
 
             {loadingUser ? (
-                <p>Loading user data...</p>
+                <p>{t('LoadingData')}</p>
             ) : (
                 user && (
                     <UserProfile user={user} showMenu={showMenu} setShowMenu={setShowMenu} />
