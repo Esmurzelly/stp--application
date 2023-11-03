@@ -22,7 +22,8 @@ const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = DB_PASSWORD.DB_NAME;
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  // origin: 'http://localhost:3000',
+  origin: 'http://95.163.237.80',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 };
