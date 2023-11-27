@@ -48,14 +48,16 @@ const Home = () => {
         setLoadingUser(false);
     }, []);
 
-
     return (
-        <div>
-            {openModal ? (
-                <ModalWindow userLocation={userLocation} />
-            ) : (
-                <NearMarkers userLocation={userLocation} onMarkerClick={handleMarkerClick} />
-            )}
+        <div className="min-h-screen">
+            <div className='bg-white shadow-upShadow py-2 h-[280px] phone_md:h-[362px] flex flex-col fixed bottom-0 left-0 z-50 w-full text-center'>
+                {openModal ? (
+                    <ModalWindow userLocation={userLocation} />
+                ) : (
+                    <NearMarkers userLocation={userLocation} onMarkerClick={handleMarkerClick} />
+                )}
+            </div>
+
 
             <div className='w-full h-full relative'>
                 <Bars3Icon onClick={() => setShowMenu(prev => !prev)} className='absolute z-40 w-8 h-w-8 right-3 top-3' />

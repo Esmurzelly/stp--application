@@ -44,9 +44,7 @@ const ModalWindow = ({ userLocation }) => {
     };
 
     return (
-        <div
-            className="bg-white shadow-upShadow py-2 h-[280px] phone_md:h-[362px] flex flex-col absolute bottom-0 left-0 z-50 w-full text-center"
-        >
+        <div>
             <div className='mx-auto w-[80%]'>
                 <h1 className='font-medium text-xs phone_md:text-xl'>
                     {t('Report')}

@@ -36,7 +36,7 @@ const NearMarkers = ({ userLocation, onMarkerClick }) => {
         }
     }, [userLocation, currentMarkers]);
 
-    const markerCount = distance.filter(dist => dist <= 10000).length;
+    const markerCount = distance.filter(dist => dist <= 10000000000).length;
 
     const getMarkerCountText = (markerCount) => {
         if (markerCount === 1) {
@@ -49,11 +49,8 @@ const NearMarkers = ({ userLocation, onMarkerClick }) => {
     };
 
     return (
-        <div
-            className="bg-white shadow-upShadow py-2 h-[280px] phone_md:h-[362px] flex flex-col absolute bottom-0 left-0 z-50 w-full text-center"
-
-        >
-            <div className='mx-auto w-[80%] overflow-scroll'>
+        <div className='overflow-auto'>
+            <div className='mx-auto w-[80%]'>
                 <h1 className='text-lg'>
                     <span className='text-light-blue font-medium'>
                         {getMarkerCountText(markerCount)}
@@ -61,7 +58,7 @@ const NearMarkers = ({ userLocation, onMarkerClick }) => {
                 </h1>
                 <ul className="flex flex-col gap-2 items-start mt-3">
                     {currentMarkers.map((marker, index) => {
-                        if (distance[index] <= 10000) {
+                        if (distance[index] <= 10000000000) {
                             return (
                                 <li
                                     className="px-[9px] py-[7px] w-full bg-[#F6F6F6] rounded-lg"
