@@ -46,6 +46,7 @@ const Registration = () => {
         if (isAuth) navigate('/');
     }, [status, isAuth, navigate]);
 
+
     const handleSubmitForm = () => {
         try {
             if (password === passwordMatch) {
@@ -88,6 +89,7 @@ const Registration = () => {
                             <input
                                 {...register('fullName', {
                                     required: true,
+                                    minLength: 3,
                                     maxLength: 99,
                                     pattern: /^[а-яА-Яa-zA-Z]+$/
                                 })}
@@ -99,6 +101,7 @@ const Registration = () => {
                             />
                             {errors?.fullName?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
                             {errors?.fullName?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("LoginError")} </p>}
+                            {errors?.fullName?.type === "minLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> few signs of name </p>}
                             {errors?.fullName?.type === "pattern" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t('AlphabetError')} </p>}
 
                         </div>
@@ -106,7 +109,10 @@ const Registration = () => {
                         <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
                             <input
                                 {...register('email', {
+                                    pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
                                     required: true,
+                                    minLength: 7,
+                                    maxLength: 40,
                                 })}
                                 type="email"
                                 placeholder={t('Email')}
@@ -115,13 +121,19 @@ const Registration = () => {
                                 className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
                             />
                             {errors?.email?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
+                            {errors?.email?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("LoginError")} </p>}
+                            {errors?.email?.type === "minLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> few signs of name </p>}
+                            {errors?.email?.type === "pattern" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> enter correct email </p>}
+
 
                         </div>
 
                         <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
                             <input
                                 {...register('password', {
-                                    required: true
+                                    required: true,
+                                    minLength: 4,
+                                    maxLength: 30,
                                 })}
                                 type="password"
                                 placeholder={t('Password')}
@@ -131,28 +143,32 @@ const Registration = () => {
                                 className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
                             />
                             {errors?.password?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
+                            {errors?.password?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> much signs </p>}
+                            {errors?.password?.type === "minLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> few signs </p>}
+
                         </div>
 
                         <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
                             <input
-                                {...register('password', {
-                                    required: true,
+                                {...register('passwordMatch', {
                                     validate: (value) => value === password,
                                 })}
                                 type="password"
                                 placeholder={t('PasswordMatch')}
-                                name="password"
+                                name="passwordMatch"
                                 value={passwordMatch}
                                 onChange={e => setPasswordMatch(e.target.value)}
                                 className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
                             />
-                            {errors?.password?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
+                            {errors?.passwordMatch?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
+                            {errors?.passwordMatch?.type === "validate" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> Not matched </p>}
                         </div>
 
                         <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
                             <input
                                 {...register('city', {
                                     required: true,
+                                    minLength: 2,
                                     maxLength: 99,
                                     pattern: /^[а-яА-Яa-zA-Z]+$/
                                 })}
@@ -164,6 +180,7 @@ const Registration = () => {
                             />
                             {errors?.city?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
                             {errors?.city?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("CityError")} </p>}
+                            {errors?.city?.type === "minLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> few words of city </p>}
                             {errors?.city?.type === "pattern" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t('AlphabetError')} </p>}
                         </div>
                     </div>
@@ -178,7 +195,6 @@ const Registration = () => {
 
                         <button
                             className='text-xl px-8 py-[6px] text-white bg-medium-blue'
-                            onClick={handleSubmitForm}
                             type='submit'
                         >
                             {t('GetRegistrated')}
