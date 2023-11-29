@@ -13,6 +13,7 @@ import { MapContainer, Popup, TileLayer, Marker, LayersControl } from 'react-lea
 import userMarker from '../assets/markers/user_marker.svg';
 import myGeo from '../assets/main/myGeo.svg';
 import showMarkers from '../assets/main/showMarkers.svg';
+import LoaderComponent from './LoaderComponent';
 
 
 const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
@@ -47,7 +48,9 @@ const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
     }
 
     if (userLocation === null) {
-        return <div>Loading...</div>;
+        return (
+            <LoaderComponent />
+        )
     }
 
     return (

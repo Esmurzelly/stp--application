@@ -10,7 +10,7 @@ import UserProfile from '../components/UserProfile';
 
 import { useTranslation } from 'react-i18next';
 
-import { Bars3Icon } from '@heroicons/react/24/solid';
+import { Bars3Icon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 
 const Home = () => {
     const { user } = useSelector(state => state.auth);
@@ -19,8 +19,9 @@ const Home = () => {
     const [userLocation, setUserLocation] = useState(null);
     const [loadingUser, setLoadingUser] = useState(true);
     const [selectedMarkerPosition, setSelectedMarkerPosition] = useState(null);
-    const [openModal, setOpenModal] = useState(true);
 
+    const [openModal, setOpenModal] = useState(true);
+    const [hideModalWindow, setHideModalWindow] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
     const { t } = useTranslation();
@@ -50,17 +51,29 @@ const Home = () => {
 
     return (
         <div className="min-h-screen">
-            <div className='bg-white shadow-upShadow py-2 h-[280px] phone_md:h-[362px] flex flex-col fixed bottom-0 left-0 z-50 w-full text-center'>
-                {openModal ? (
-                    <ModalWindow userLocation={userLocation} />
-                ) : (
-                    <NearMarkers userLocation={userLocation} onMarkerClick={handleMarkerClick} />
-                )}
-            </div>
+            {!hideModalWindow ? (
+                <div className='bg-white shadow-upShadow py-2 h-[280px] phone_md:h-[362px] flex flex-col fixed bottom-0 left-0 z-50 w-full text-center'>
+                    <div className='w-full flex justify-center' onClick={() => setHideModalWindow(true)}>
+                        <ChevronDownIcon className='w-4 h-4 cursor-pointer' />
+                    </div>
+                    {openModal ? (
+                        <ModalWindow userLocation={userLocation} />
+                    ) : (
+                        <NearMarkers userLocation={userLocation} onMarkerClick={handleMarkerClick} />
+                    )}
+                </div>
+            ) : (
+                <div className='bg-white shadow-upShadow py-2 h-[40px] phone_md:h-[40px] flex flex-col fixed bottom-0 left-0 z-50 w-full text-center'>
+                    <div className='w-full flex justify-center items-center' onClick={() => setHideModalWindow(false)}>
+                        <ChevronUpIcon className='w-4 h-4 cursor-pointer' />
+                    </div>
+                </div>
+            )}
+
 
 
             <div className='w-full h-full relative'>
-                <Bars3Icon onClick={() => setShowMenu(prev => !prev)} className='absolute z-40 w-8 h-w-8 right-3 top-3' />
+                <Bars3Icon onClick={() => setShowMenu(prev => !prev)} className='absolute z-40 w-8 h-w-8 right-3 top-3 cursor-pointer' />
                 <Map userLocation={userLocation} selectedMarkerPosition={selectedMarkerPosition} setOpenModal={setOpenModal} />
             </div>
 

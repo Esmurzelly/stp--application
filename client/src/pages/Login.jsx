@@ -63,8 +63,16 @@ const Login = () => {
 
             <div className="flex-1 flex justify-center items-center pb-28">
                 <form
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleSubmit(handleSubmitForm());
+                        }
+                    }}
+
                     className='flex flex-col items-center gap-7'
-                    onSubmit={handleSubmit(handleSubmitForm)}>
+                    onSubmit={handleSubmit(handleSubmitForm)}
+                >
                     <h1>{t('Authorization')}</h1>
 
                     <div className="flex flex-col gap-9 mt-8">
@@ -110,8 +118,9 @@ const Login = () => {
 
                         <button
                             className='text-xl px-8 py-[6px] text-white bg-medium-blue'
-                            type="submit"
-                            onClick={handleSubmitForm}>
+                            type='submit'
+                            onClick={handleSubmit(handleSubmitForm)}
+                        >
                             {t('Enter')}
                         </button>
 

@@ -51,7 +51,7 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
             className={`bg-white py-3 px-5 text-2xl font-roboto font-extralight w-full flex flex-col justify-center items-start min-h-full 
                         ${showMenu ? 'translate-x-[0%]' : 'translate-x-[100%] hidden'} ease-in duration-300 z-50 absolute top-0 right-0`}>
 
-            <XMarkIcon className='absolute z-40 w-8 h-w-8 right-3 top-3' onClick={() => setShowMenu(prev => !prev)} />
+            <XMarkIcon className='absolute z-40 w-8 h-w-8 right-3 top-3 cursor-pointer' onClick={() => setShowMenu(prev => !prev)} />
 
             <div className="logo">
                 <img className='w-16 h-16' src={logo} alt="logo" />
@@ -63,7 +63,7 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
 
                     <img className='w-32 h-3w-32' src={avatar_registration} alt="avatar_registration" />
 
-                    <ul className='text-light-gray text-left mx-auto flex flex-col gap-2 w-[80%]'>
+                    <ul className='text-light-gray  mx-auto flex items-start flex-col gap-2'>
                         <li className='flex gap-2 items-center'>
                             <span>{t('Name')}: </span>
                             {changeClickFullName ? (
