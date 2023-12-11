@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getMe } from '../redux/features/authSlice';
 
-import Map from '../components/Map';
-import ModalWindow from '../components/ModalWindow';
-import NearMarkers from '../components/NearMarkers';
-import UserProfile from '../components/UserProfile';
+import { Map, ModalWindow, NearMarkers, UserProfile } from '../components'
 
 import { useTranslation } from 'react-i18next';
 
 import { Bars3Icon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
+import { getLocation } from '../utils/getLocation';
 
-const Home = () => {
+const Home = React.memo(() => {
     const { user } = useSelector(state => state.auth);
     const dispatch = useDispatch();
 
@@ -31,28 +28,13 @@ const Home = () => {
     };
 
     useEffect(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    setUserLocation([latitude, longitude])
-                },
-                (error) => {
-                    console.error('Error getting user location:', error);
-                }
-            )
-        } else {
-            console.error('Geolocation is not supported by this browser.');
-        }
-
-        dispatch(getMe())
-        setLoadingUser(false);
-    }, []);
+        getLocation(setUserLocation, dispatch, setLoadingUser);
+    }, [dispatch]);
 
     return (
         <div className="min-h-screen">
             {!hideModalWindow ? (
-                <div className='bg-white shadow-upShadow py-2 h-[280px] phone_md:h-[362px] flex flex-col fixed bottom-0 left-0 z-50 w-full text-center'>
+                <div className='modal__window h-[300px] phone_md:h-[362px]'>
                     <div className='w-full flex justify-center' onClick={() => setHideModalWindow(true)}>
                         <ChevronDownIcon className='w-4 h-4 cursor-pointer' />
                     </div>
@@ -63,14 +45,12 @@ const Home = () => {
                     )}
                 </div>
             ) : (
-                <div className='bg-white shadow-upShadow py-2 h-[40px] phone_md:h-[40px] flex flex-col fixed bottom-0 left-0 z-50 w-full text-center'>
+                <div className='modal__window h-[40px] phone_md:h-[40px]'>
                     <div className='w-full flex justify-center items-center' onClick={() => setHideModalWindow(false)}>
                         <ChevronUpIcon className='w-4 h-4 cursor-pointer' />
                     </div>
                 </div>
             )}
-
-
 
             <div className='w-full h-full relative'>
                 <Bars3Icon onClick={() => setShowMenu(prev => !prev)} className='absolute z-40 w-8 h-w-8 right-3 top-3 cursor-pointer' />
@@ -81,12 +61,10 @@ const Home = () => {
             {loadingUser ? (
                 <p>{t('LoadingData')}</p>
             ) : (
-                user && (
-                    <UserProfile user={user} showMenu={showMenu} setShowMenu={setShowMenu} />
-                )
-            )}
+                user && <UserProfile user={user} showMenu={showMenu} setShowMenu={setShowMenu} />
+            )};
         </div>
     )
-}
+});
 
 export default Home

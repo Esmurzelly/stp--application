@@ -22,6 +22,7 @@
     "EnterCity": "输入新城市",
     "SaveChanges": "保存更改",
     "LogOut": "注销",
+    "AdminPanel": "管理面板",
 
     "YourLocation": "您的位置",
     "Report": "报告危险",
@@ -32,11 +33,11 @@
     "CarIncident": "事故",
     "WhereIsDangerous": "距离你多少米是危险？",
     "DesctibeWhatYouveSeen": "描述一下你注意到了什么",
+    "NoDescription": "没有说明",
 
-    "oneMarker": "附近有 个标记",
-    "twoMarkers": "个标记并排",
-    "threeMarker3": "个标记并排",
+    "MarksNumber": "附近标记：",
     "NoMarkers": "附近没有标记",
+    "AddImage": "添加图片",
 
     "Category": "类别",
     "Description": "描述",

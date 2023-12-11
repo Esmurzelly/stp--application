@@ -10,21 +10,18 @@ import { useForm } from 'react-hook-form';
 
 import { useTranslation } from 'react-i18next';
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-
 import logo from '../assets/main/Logo.svg';
 import avatar_registration from '../assets/main/avatar_registration.svg';
 
-import "/node_modules/flag-icons/css/flag-icons.min.css";
-import ChangeLanguage from '../components/ChangeLanguage';
-
-
+import '/node_modules/flag-icons/css/flag-icons.min.css';
+import { ChangeLanguage } from '../components';
+import InputComponent from '../components/InputComponent';
 
 const Registration = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
     } = useForm();
 
     const { t } = useTranslation();
@@ -46,7 +43,6 @@ const Registration = () => {
         if (isAuth) navigate('/');
     }, [status, isAuth, navigate]);
 
-
     const handleSubmitForm = () => {
         try {
             if (password === passwordMatch) {
@@ -57,7 +53,7 @@ const Registration = () => {
                 setFullName('');
                 setCity('');
             } else {
-                toast(t('PasswordMathError'))
+                toast(t('PasswordMathError'));
             }
         } catch (e) {
             console.log(e);
@@ -65,148 +61,110 @@ const Registration = () => {
     };
 
     return (
-        <section className='flex flex-col min-h-screen bg-white py-3 px-5 text-2xl font-roboto font-extralight'>
-            <div className='w-full flex justify-between items-start'>
+        <section className="flex flex-col min-h-screen bg-white py-3 px-5 text-2xl font-roboto font-extralight">
+            <div className="w-full flex justify-between items-start">
                 <div className="logo">
-                    <img className='w-16 h-16' src={logo} alt="logo" />
+                    <img className="w-16 h-16" src={logo} alt="logo" />
                 </div>
 
                 <ChangeLanguage />
             </div>
 
-
             <div className="flex-1 flex justify-center items-center pb-28">
                 <form
-                    className='flex flex-col items-center gap-7'
+                    className="flex flex-col items-center gap-7"
                     onSubmit={handleSubmit(handleSubmitForm)}
                 >
                     <h1>{t('Registration')}</h1>
 
                     <img src={avatar_registration} alt="avatar_registration" />
 
-                    <div className='flex flex-col gap-9'>
-                        <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
-                            <input
-                                {...register('fullName', {
-                                    required: true,
-                                    minLength: 3,
-                                    maxLength: 99,
-                                    pattern: /^[а-яА-Яa-zA-Z]+$/
-                                })}
-                                type="text"
-                                placeholder={t('Login')}
-                                value={fullName}
-                                onChange={e => setFullName(e.target.value)}
-                                className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
-                            />
-                            {errors?.fullName?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
-                            {errors?.fullName?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("LoginError")} </p>}
-                            {errors?.fullName?.type === "minLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> few signs of name </p>}
-                            {errors?.fullName?.type === "pattern" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t('AlphabetError')} </p>}
-
-                        </div>
-
-                        <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
-                            <input
-                                {...register('email', {
-                                    pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-                                    required: true,
-                                    minLength: 7,
-                                    maxLength: 40,
-                                })}
-                                type="email"
-                                placeholder={t('Email')}
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                                className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
-                            />
-                            {errors?.email?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
-                            {errors?.email?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("LoginError")} </p>}
-                            {errors?.email?.type === "minLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> few signs of name </p>}
-                            {errors?.email?.type === "pattern" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> enter correct email </p>}
-
-
-                        </div>
-
-                        <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
-                            <input
-                                {...register('password', {
-                                    required: true,
-                                    minLength: 4,
-                                    maxLength: 30,
-                                })}
-                                type="password"
-                                placeholder={t('Password')}
-                                name="password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
-                            />
-                            {errors?.password?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
-                            {errors?.password?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> much signs </p>}
-                            {errors?.password?.type === "minLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> few signs </p>}
-
-                        </div>
-
-                        <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
-                            <input
-                                {...register('passwordMatch', {
-                                    validate: (value) => value === password,
-                                })}
-                                type="password"
-                                placeholder={t('PasswordMatch')}
-                                name="passwordMatch"
-                                value={passwordMatch}
-                                onChange={e => setPasswordMatch(e.target.value)}
-                                className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
-                            />
-                            {errors?.passwordMatch?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
-                            {errors?.passwordMatch?.type === "validate" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> Not matched </p>}
-                        </div>
-
-                        <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
-                            <input
-                                {...register('city', {
-                                    required: true,
-                                    minLength: 2,
-                                    maxLength: 99,
-                                    pattern: /^[а-яА-Яa-zA-Z]+$/
-                                })}
-                                type="text"
-                                placeholder={t('City')}
-                                value={city}
-                                onChange={e => setCity(e.target.value)}
-                                className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
-                            />
-                            {errors?.city?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("RequiredError")} </p>}
-                            {errors?.city?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t("CityError")} </p>}
-                            {errors?.city?.type === "minLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> few words of city </p>}
-                            {errors?.city?.type === "pattern" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t('AlphabetError')} </p>}
-                        </div>
+                    <div className="flex flex-col gap-9">
+                        <InputComponent
+                            type="text"
+                            placeholder={t('Login')}
+                            name="fullName"
+                            value={fullName}
+                            onChange={e => setFullName(e.target.value)}
+                            register={register}
+                            error={errors?.fullName?.type}
+                            required={true}
+                            minLength={3}
+                            maxLength={99}
+                            autoComplete={'off'}
+                            pattern={/^[а-яА-Яa-zA-Z]+$/}
+                        />
+                        <InputComponent
+                            type="email"
+                            placeholder={t('Email')}
+                            name="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            register={register}
+                            error={errors?.email?.type}
+                            required={true}
+                            minLength={7}
+                            maxLength={40}
+                            autoComplete={'off'}
+                            pattern={/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g}
+                        />
+                        <InputComponent
+                            type="password"
+                            placeholder={t('Password')}
+                            name="password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            register={register}
+                            error={errors?.password?.type}
+                            required={true}
+                            minLength={4}
+                            maxLength={30}
+                            autoComplete={'off'}
+                        />
+                        <InputComponent
+                            type="password"
+                            placeholder={t('PasswordMatch')}
+                            name="passwordMatch"
+                            value={passwordMatch}
+                            onChange={e => setPasswordMatch(e.target.value)}
+                            register={register}
+                            error={errors?.passwordMatch?.type}
+                            required={true}
+                            autoComplete={'off'}
+                            validatePasswordMatch={true}
+                        />
+                        <InputComponent
+                            type="text"
+                            placeholder={t('City')}
+                            name="city"
+                            value={city}
+                            onChange={e => setCity(e.target.value)}
+                            register={register}
+                            error={errors?.city?.type}
+                            required={true}
+                            minLength={2}
+                            maxLength={99}
+                            autoComplete={'off'}
+                            pattern={/^[а-яА-Яa-zA-Z]+$/}
+                        />
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        <Link
-                            className='text-base text-center text-light-blue'
-                            to="/login"
-                        >
+                        <Link className="text-base text-center text-light-blue" to="/login">
                             {t('AlraedyRegistrated')}
                         </Link>
 
                         <button
-                            className='text-xl px-8 py-[6px] text-white bg-medium-blue'
-                            type='submit'
+                            className="text-xl px-8 py-[6px] text-white bg-medium-blue"
+                            type="submit"
                         >
                             {t('GetRegistrated')}
                         </button>
                     </div>
                 </form>
             </div>
-
-
         </section>
+    );
+};
 
-    )
-}
-
-export default Registration
+export default Registration;

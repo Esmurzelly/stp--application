@@ -22,6 +22,7 @@
     "EnterCity": "Enter a new city",
     "SaveChanges": "Save changes",
     "LogOut": "Log Out",
+    "AdminPanel": "Admin Panel",
 
     "YourLocation": "Your location",
     "Report": "Report danger",
@@ -32,11 +33,11 @@
     "CarIncident": "Accident",
     "WhereIsDangerous": "How many meters away from you is danger?",
     "DesctibeWhatYouveSeen": "Describe what you noticed",
+    "NoDescription": "No description",
 
-    "oneMarker": "mark nearby",
-    "twoMarkers": "marks nearby",
-    "threeMarker3": "marks nearby",
+    "MarksNumber": "Marks nearby:",
     "NoMarkers": "There are no markers nearby",
+    "AddImage": "Add image",
 
     "Category": "Category",
     "Description": "Description",

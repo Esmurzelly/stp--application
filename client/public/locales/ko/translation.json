@@ -22,6 +22,7 @@
     "EnterCity": "새 도시를 입력하세요",
     "SaveChanges": "변경 사항 저장",
     "LogOut": "로그아웃",
+    "AdminPanel": "관리자 패널",
 
     "YourLocation": "당신의 위치",
     "Report": "위험 보고",
@@ -32,11 +33,11 @@
     "CarIncident": "사고",
     "WhereIsDangerous": "위험은 당신으로부터 몇 미터 떨어져 있습니까?",
     "DesctibeWhatYouveSeen": "당신이 발견한 내용을 설명하세요",
+    "NoDescription": "설명 없음",
 
-    "oneMarker": "근처에 마크 개 있음",
-    "twoMarkers": "서로 옆에 개의 표시가 있습니다.",
-    "threeMarker3": "근처에 마크 있음",
+    "MarksNumber": "주변 마크:",
     "NoMarkers": "근처에 마커가 없습니다",
+    "AddImage": "이미지 추가",
 
     "Category": "범주",
     "Description": "설명",

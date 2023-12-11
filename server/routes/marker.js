@@ -10,7 +10,6 @@ const router = new Router();
 
 // create marker
 // http://localhost:3001/api/markers
-// router.post('/', checkAuth, createMarker);
 router.post('/', checkAuth, createMarker);
 
 // get markers
@@ -23,7 +22,6 @@ router.get('/', getAllMarkers);
 
 // remove marker
 // http://localhost:3001/api/markers/:id
-// router.delete('/:id', checkAuth, removeMarker);
 router.delete('/:id', checkAuth, removeMarker);
 
 export default router;

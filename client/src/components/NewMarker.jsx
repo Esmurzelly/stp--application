@@ -18,12 +18,37 @@ import Moment from 'react-moment';
 
 import { useTranslation } from 'react-i18next';
 
-const NewMarker = ({ _id, category, description, position, metres, author, createdAt }) => {
+const NewMarker = ({ _id, category, description, position, metres, author, createdAt, image }) => {
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.auth);
     const [isFront, setIsFront] = useState(false);
 
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const currentLanguage = i18n.language;
+    let translatedCategory = '';
+    let translatedNoDescription = t('NoDescription', { lng: currentLanguage });
+
+    switch (category) {
+        case 'Угроза жизни':
+            translatedCategory = t('DangerLife', { lng: currentLanguage });
+            break;
+        case 'Неадекватное поведение':
+            translatedCategory = t('CrazyBehavior', { lng: currentLanguage });
+            break;
+        case 'Домагательства':
+            translatedCategory = t('Harassment', { lng: currentLanguage });
+            break;
+        case 'Проблемы с инфраструктурой':
+            translatedCategory = t('Infrastructure', { lng: currentLanguage });
+            break;
+        case 'Авария':
+            translatedCategory = t('CarIncident', { lng: currentLanguage });
+            break;
+        default:
+            translatedCategory = category;
+            break;
+    }
+
 
     const handleRemoveMarker = async () => {
         try {
@@ -45,7 +70,7 @@ const NewMarker = ({ _id, category, description, position, metres, author, creat
 
     const handleMarkerClick = () => {
         setIsFront(true);
-    }
+    };
 
     return (
         <LayersControl.Overlay
@@ -62,15 +87,23 @@ const NewMarker = ({ _id, category, description, position, metres, author, creat
             }}>
                 <Popup>
                     <div className='w-full h-full flex flex-col gap-2 items-start'>
-                        <span>{t('Category')}: {category}</span>
-                        <span className='break-words'> {t('Description')}: {description}</span>
+                        <span>{t('Category')}: {translatedCategory} </span>
+                        {description.length === 0 ? (
+                            <span className='break-words'> {t('Description')}: {translatedNoDescription}</span>
+                        ) : (
+                            <span className='break-words'> {t('Description')}: {description}</span>
+                        )}
                         <span>{t('MarkWasAdded')}: <Moment date={createdAt} format='D.MM.YYYY, HH:mm' /> <br /></span>
+
+
+                        {image && (
+                            <img className='w-24' src={`${process.env.REACT_APP_REQUEST_IMAGE}/${image}`} alt="request__image" />
+                        )}
 
                         {user && user._id === author && (
                             <button className='bg-light-blue text-white px-2 py-1 rounded-md' onClick={handleRemoveMarker}>{t("Delete")}</button>
                         )}
                     </div>
-
                 </Popup>
                 <Circle center={position} radius={metres} />
 

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllMarkers } from '../redux/features/markerSlice';
@@ -16,10 +16,12 @@ import showMarkers from '../assets/main/showMarkers.svg';
 import LoaderComponent from './LoaderComponent';
 
 
-const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
+const Map = React.memo(({ userLocation, selectedMarkerPosition, setOpenModal }) => {
     const dispatch = useDispatch();
     const { currentMarkers } = useSelector(state => state.markers);
     const mapRef = useRef();
+
+    // console.log('currentMarkers', currentMarkers);
 
     const { t } = useTranslation();
 
@@ -29,11 +31,23 @@ const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
         } catch (error) {
             console.log(error);
         }
-    });
+    }, [dispatch]);
 
     useEffect(() => {
-        fetchMarkers()
-    }, [dispatch]);
+        fetchMarkers();
+    }, [dispatch, fetchMarkers]);
+
+
+    // request each 1 second 
+    // useEffect(() => {
+    //     fetchMarkers();
+
+    //     const intervalId = setInterval(fetchMarkers, 1000);
+
+    //     return () => {
+    //         clearInterval(intervalId); // Очистка интервала при размонтировании
+    //     };
+    // }, [fetchMarkers]);
 
     useEffect(() => {
         if (mapRef.current && selectedMarkerPosition) {
@@ -89,7 +103,7 @@ const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
                 </Marker>
 
                 <LayersControl position='bottomleft'>
-                    {currentMarkers.map((mapEl) => (
+                    {currentMarkers?.map((mapEl) => (
                         <NewMarker
                             key={mapEl._id}
                             _id={mapEl._id}
@@ -99,6 +113,7 @@ const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
                             metres={mapEl.metres || 20}
                             author={mapEl.author}
                             createdAt={mapEl.createdAt}
+                            image={mapEl?.image}
                         />
                     ))}
                 </LayersControl>
@@ -107,6 +122,6 @@ const Map = ({ userLocation, selectedMarkerPosition, setOpenModal }) => {
         </div>
 
     )
-}
+});
 
 export default Map

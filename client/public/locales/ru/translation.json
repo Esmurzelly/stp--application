@@ -22,6 +22,7 @@
     "EnterCity": "Введите новый город",
     "SaveChanges": "Сохранить изменения",
     "LogOut": "Выйти",
+    "AdminPanel": "Панель администратора",
 
     "YourLocation": "Ваше местоположение",
     "Report": "Сообщить об опасности",
@@ -32,11 +33,11 @@
     "CarIncident": "Авария",
     "WhereIsDangerous": "В скольких метрах от вас находится опасность?",
     "DesctibeWhatYouveSeen": "Опишите, что вы заметили",
+    "NoDescription": "Описание отсутсвует",
 
-    "oneMarker": "метка рядом",
-    "twoMarkers": "метки рядом",
-    "threeMarker3": "меток рядом",
+    "MarksNumber": "Меток рядом:",
     "NoMarkers": "Меток поблизости нет",
+    "AddImage": "Добавить фото",
 
     "Category": "Категория",
     "Description": "Описание",

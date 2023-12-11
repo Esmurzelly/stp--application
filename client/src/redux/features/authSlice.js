@@ -6,17 +6,19 @@ const initialState = {
     token: null,
     isLoading: null,
     status: null,
+    isAdmin: false,
 };
 
 export const registerUser = createAsyncThunk(
     'auth/registerUser',
-    async ({ email, password, fullName, city }) => {
+    async ({ email, password, fullName, city, avatar }) => {
         try {
             const { data } = await axios.post('/auth/register', {
                 email,
                 password,
                 fullName,
-                city
+                city,
+                avatar
             }, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -59,6 +61,7 @@ export const getMe = createAsyncThunk(
     async () => {
         try {
             const { data } = await axios.get('/auth/me');
+            
             return data;
         } catch (error) {
             console.log(`error is ${error}`);
@@ -76,6 +79,34 @@ export const editUserProfile = (updatedProfile) => async (dispatch) => {
         dispatch({ type: 'EDIT_PROFILE_ERROR', payload: error.message });
     }
 };
+
+export const uploadAvatar = createAsyncThunk(
+    'auth/uploadAvatar',
+    async (formData) => {
+        try {
+            const response = await axios.post('/auth/avatar', formData, {
+                'Content-Type': 'multipart/form-data',
+            });
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+);
+
+export const deleteAvatar = createAsyncThunk(
+    'auth/deleteAvatar',
+    async () => {
+        try {
+            const response = await axios.delete('/auth/avatar');
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+);
 
 
 export const authSlice = createSlice({
@@ -132,6 +163,9 @@ export const authSlice = createSlice({
             state.status = null;
             state.user = action.payload?.user;
             state.token = action.payload?.token;
+
+            let adminEmail = action.payload?.user?.email;
+            state.isAdmin = true ? adminEmail === 'adam@test.com' : false;
         },
         [getMe.rejected]: (state, action) => {
             state.isLoading = false;

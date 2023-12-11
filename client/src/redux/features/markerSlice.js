@@ -10,9 +10,12 @@ const initialState = {
 export const createMarker = createAsyncThunk(
   'markers/createMarker',
   async params => {
+    console.log('Params in createMarker:', ...params);
     try {
-      const { data } = await axios.post('/markers', params);
-        console.log('data from redux', data);
+      const { data } = await axios.post('/markers', params, {
+        'Content-Type': 'multipart/form-data',
+      });
+        
       return data;
     } catch (error) {
       console.error('Ошибка при создании маркера:', error);
@@ -25,6 +28,11 @@ export const getAllMarkers = createAsyncThunk(
   async () => {
     try {
       const { data } = await axios.get('/markers');
+
+      if(!data) {
+        return
+      }
+
       return data;
     } catch (error) {
       console.log(error);
@@ -54,7 +62,11 @@ export const markerSlice = createSlice({
     },
     [createMarker.fulfilled]: (state, action) => {
       state.loading = false;
-      state.markers.push(action.payload);
+      if(Array.isArray(state.markers)) {
+        state.markers.push(action.payload);
+      } else {
+        state.markers = [action.payload];
+      }
     },
     [createMarker.rejected]: state => {
       state.loading = false;

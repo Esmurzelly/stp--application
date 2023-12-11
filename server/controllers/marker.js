@@ -1,35 +1,76 @@
 import User from "../models/User.js";
 import Marker from "../models/Marker.js";
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 
 // create marker
 export const createMarker = async (req, res) => {
     try {
+        const image = req?.files?.image;
+        const MARKER_STORAGE=process.env.MARKER_STORAGE;
+        console.log('is it exist?', image)
+        // const marker = req.body;
+        
         const { category, description, metres } = req.body;
         const position = JSON.parse(req.body.position);
 
-        if (!category || !description || !position || !metres) {
+        if (!category || !position || !metres) {
             console.log('Missing required fields:', { category, description, position, metres }); 
             return res.status(404).json({ message: "fields are not found!" });
         }
+        
+        // marker with image
+        if(image && image.name) {
+            const newMarkerWithImage = new Marker({
+                category,
+                description,
+                position,
+                author: req.userId,
+                metres,
+                image,
+            });
 
-        console.log({ category, description, position, metres }); 
+            const markerImageName = uuidv4() + '.jpg';
+            image.mv(`${MARKER_STORAGE}` + markerImageName);
+            newMarkerWithImage.image = markerImageName;
 
-        const newMarker = new Marker({
-            category,
-            description,
-            position,
-            author: req.userId,
-            metres,
-            // createdAt
-            // imgUrl: ''
-        });
+            await newMarkerWithImage.save();
 
-        await newMarker.save();
+            console.log('====================start====================')
+            console.log({ category, description, position, metres, image }); 
 
-        console.log('newMarker', newMarker);
-        console.log('req.userId', req.userId);
+            console.log('newMarker with image', newMarkerWithImage);
+            console.log('req.userId with image', req.userId);
 
-        res.json(newMarker);
+            console.log('req.files with image', req.files);
+            console.log('WITH IMAGE')
+            console.log('====================end====================')
+            res.json(newMarkerWithImage);
+        } else {
+            const newMarker = new Marker({
+                category,
+                description,
+                position,
+                author: req.userId,
+                metres,
+            });
+
+            
+            await newMarker.save();
+            
+            
+            console.log('====================start====================')
+            console.log({ category, description, position, metres }); 
+            console.log('NO IMAGE')
+            console.log('req.files no image', req.files);
+            console.log('newMarker no image', newMarker);
+            console.log('req.userId no image', req.userId);
+            console.log('====================end====================')
+
+            res.json(newMarker);
+        }
+
+        
     } catch (e) {
         res.status(500).json({ message: `Ошибка сервера - ${e.message}` });
     }
@@ -40,8 +81,11 @@ export const getAllMarkers = async (req, res) => {
     try {
         const markers = await Marker.find().sort('-createdAt');
         const currentMarkers = await Marker.find().limit(200).sort('-createdAt');
+        
+        // const twenyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // Время 24 часа назад
+        // const currentMarkers = await Marker.find({ createdAt: { $gte: twenyFourHoursAgo } }).sort('-createdAt');
 
-        if(!markers) {
+        if(!currentMarkers || currentMarkers.length === 0) {
             return res.json({ message: "No markers" })
         }
 

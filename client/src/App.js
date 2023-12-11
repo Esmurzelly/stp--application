@@ -1,15 +1,15 @@
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Registration from './pages/Registration';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-
 import { checkIsAuth, getMe } from './redux/features/authSlice';
+import LoaderComponent from './components/LoaderComponent';
 
-import NotFound from './pages/NotFound';
+const Home = lazy(() => import(/* webpackChunkName: "Home" */ './pages/Home'));
+const Login = lazy(() => import(/* webpackChunkName: "Login" */ './pages/Login'));
+const Registration = lazy(() => import(/* webpackChunkName: "Registration" */ './pages/Registration'));
+const AdminPanel = lazy(() => import(/* webpackChunkName: "AdminPanel" */ './pages/AdminPanel'));
+const NotFound = lazy(() => import(/* webpackChunkName: "NotFound" */ './pages/NotFound'));
 
 function App() {
   const dispatch = useDispatch();
@@ -20,16 +20,59 @@ function App() {
   }, [dispatch]);
 
   return (
-      <Routes>
-        {isAuth 
-          ? <Route path="/" element={<Home />} />
-          : <Route path="/" element={<Login />} />
+    <Routes>
+      {isAuth ? (
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<LoaderComponent />}>
+              <Home />
+            </Suspense>
+          }
+        />
+      ) : (
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<LoaderComponent />}>
+              <Login />
+            </Suspense>
+          }
+        />
+      )}
+      <Route
+        path="login"
+        element={
+          <Suspense fallback={<LoaderComponent />}>
+            <Login />
+          </Suspense>
         }
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Registration />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-
+      />
+      <Route
+        path="register"
+        element={
+          <Suspense fallback={<LoaderComponent />}>
+            <Registration />
+          </Suspense>
+        }
+      />
+      <Route
+        path="admin-panel"
+        element={
+          <Suspense fallback={<LoaderComponent />}>
+            <AdminPanel />
+          </Suspense>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Suspense fallback={<LoaderComponent />}>
+            <NotFound />
+          </Suspense>
+        }
+      />
+    </Routes>
   );
 }
 

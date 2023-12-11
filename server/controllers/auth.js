@@ -1,6 +1,9 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
+
 
 export const register = async (req, res) => {
   try {
@@ -21,7 +24,7 @@ export const register = async (req, res) => {
       fullName,
       email,
       passwordHash,
-      city,
+      city
     });
 
     const token = jwt.sign(
@@ -109,7 +112,6 @@ export const getMe = async (req, res) => {
   }
 };
 
-
 export const editProfile = async (req, res) => {
   try {
     const { fullName, email, city } = req.body;
@@ -129,6 +131,52 @@ export const editProfile = async (req, res) => {
       user,
       message: 'Profile updated successfully'
     })
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+export const uploadAvatar = async (req, res) => {
+  const IMAGE_STORAGE=process.env.IMAGE_STORAGE;
+  
+  try {
+    const file = req.files.file;
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    const avatarName = uuidv4() + '.jpg';
+    file.mv(`${IMAGE_STORAGE}` + avatarName);
+    user.avatar = avatarName;
+    await user.save();
+
+    console.log('user id', user)
+    
+    return res.json(user);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+export const deleteAvatar = async (req, res) => {
+  const IMAGE_STORAGE=process.env.IMAGE_STORAGE;
+  
+  try {
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    fs.unlinkSync(`${IMAGE_STORAGE}` + user.avatar);
+    user.avatar = null;
+    await user.save();
+
+    return res.json(user);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ message: 'Internal server error' });

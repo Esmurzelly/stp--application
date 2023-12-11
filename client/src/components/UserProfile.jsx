@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
-import { editUserProfile, logOut } from '../redux/features/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { editUserProfile, logOut, uploadAvatar, deleteAvatar } from '../redux/features/authSlice';
 
 import { useTranslation } from 'react-i18next';
 
@@ -13,14 +13,24 @@ import logo from '../assets/main/Logo.svg';
 import avatar_registration from '../assets/main/avatar_registration.svg';
 import changeInfo from '../assets/main/changeInfo.svg';
 
-import { XMarkIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon, TrashIcon, ArrowLongRightIcon } from '@heroicons/react/24/solid';
 
 import { toast } from 'react-toastify';
 
-const UserProfile = ({ user, showMenu, setShowMenu }) => {
+
+const UserProfile = React.memo(({ showMenu, setShowMenu }) => {
+    const { user } = useSelector(state => state.auth);
+    const isAdminUser = useSelector(state => state.auth.isAdmin);
+
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const filePicekerRef = useRef(null);
+
     const [fullName, setFullName] = useState(user.fullName);
     const [email, setEmail] = useState(user.email);
     const [city, setCity] = useState(user.city);
+
+    const userAvatarPhoto = user.avatar === null || user.avatar === '' ? avatar_registration : `http://localhost:3001/static/userAvatar/${user.avatar}`;
 
     const [changeClickFullName, setChangeClickFullName] = useState(false);
     const [changeClickEmail, setChangeClickEmail] = useState(false);
@@ -30,6 +40,23 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
 
     const dispatch = useDispatch();
 
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+
+        const reader = new FileReader();
+
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            reader.readAsDataURL(selectedFile);
+        }
+
+        reader.onload = (readerEvent) => {
+            if (selectedFile.type.includes("image")) {
+                setImagePreview(readerEvent.target.result);
+            }
+        };
+    };
+
     const handleSubmit = () => {
         const updatedProfile = {
             fullName,
@@ -38,6 +65,13 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
         };
 
         dispatch(editUserProfile(updatedProfile));
+
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            dispatch(uploadAvatar(formData));
+        }
     };
 
     const handleLogOut = () => {
@@ -46,12 +80,21 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
         toast(t('YouLeftFromAccount'));
     }
 
+    const handleAvatarClick = () => {
+        filePicekerRef.current.click();
+    };
+
+    const handleCloseProfile = () => {
+        setShowMenu(prev => !prev)
+        setImagePreview(null);
+    }
+
     return (
         <section
             className={`bg-white py-3 px-5 text-2xl font-roboto font-extralight w-full flex flex-col justify-center items-start min-h-full 
-                        ${showMenu ? 'translate-x-[0%]' : 'translate-x-[100%] hidden'} ease-in duration-300 z-50 absolute top-0 right-0`}>
+                        ${showMenu ? 'translate-x-[0%]' : 'translate-x-[100%] hidden'} ease-in duration-300 z-50 absolute top-0 right-0 overflow-hidden`}>
 
-            <XMarkIcon className='absolute z-40 w-8 h-w-8 right-3 top-3 cursor-pointer' onClick={() => setShowMenu(prev => !prev)} />
+            <XMarkIcon className='absolute z-40 w-8 h-w-8 right-3 top-3 cursor-pointer' onClick={() => handleCloseProfile()} />
 
             <div className="logo">
                 <img className='w-16 h-16' src={logo} alt="logo" />
@@ -61,7 +104,30 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
                 <form className='flex flex-col gap-7 justify-center items-center w-full' onSubmit={handleSubmit}>
                     <h1>{t('Profile')}</h1>
 
-                    <img className='w-32 h-3w-32' src={avatar_registration} alt="avatar_registration" />
+                    <div className='flex flex-col items-center gap-3' >
+                        <div className='flex flex-row items-end'>
+                            {imagePreview != null ? (
+                                <div className='flex flex-row items-center gap-6'>
+                                    <img onClick={handleAvatarClick} className='w-20 rounded-md cursor-pointer' src={userAvatarPhoto} alt="avatar_registration" />
+                                    <ArrowLongRightIcon className='w-5 h-5' />
+                                    {imagePreview != null && <img className='w-20 rounded-md' src={imagePreview} alt="imagePreview" />}
+
+                                    <button className='absolute ml-[240px]' onClick={() => dispatch(deleteAvatar())}>
+                                        <TrashIcon className='w-6 h-6 cursor-pointer text-light-blue' />
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <img onClick={handleAvatarClick} className='w-20 rounded-md cursor-pointer' src={userAvatarPhoto} alt="avatar_registration" />
+
+                                    <button className='absolute ml-24' onClick={() => dispatch(deleteAvatar())}>
+                                        <TrashIcon className='w-6 h-6 cursor-pointer text-light-blue' />
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                        <input className='hidden' ref={filePicekerRef} type="file" onChange={handleFileChange} accept='image/*' />
+                    </div>
 
                     <ul className='text-light-gray  mx-auto flex items-start flex-col gap-2'>
                         <li className='flex gap-2 items-center'>
@@ -71,7 +137,7 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
                             ) : (
                                 <>
                                     <span>{user.fullName}</span>
-                                    <img onClick={() => setChangeClickFullName(true)} src={changeInfo} alt="changeInfo" />
+                                    <img className='cursor-pointer' onClick={() => setChangeClickFullName(true)} src={changeInfo} alt="changeInfo" />
                                 </>
                             )}
                         </li>
@@ -83,7 +149,7 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
                             ) : (
                                 <>
                                     <span>{user.email}</span>
-                                    <img onClick={() => setChangeClickEmail(true)} src={changeInfo} alt="changeInfo" />
+                                    <img className='cursor-pointer' onClick={() => setChangeClickEmail(true)} src={changeInfo} alt="changeInfo" />
                                 </>
                             )}
                         </li>
@@ -96,7 +162,7 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
                             ) : (
                                 <>
                                     <span>{user.city}</span>
-                                    <img onClick={() => setChangeClickCity(true)} src={changeInfo} alt="changeInfo" />
+                                    <img className='cursor-pointer' onClick={() => setChangeClickCity(true)} src={changeInfo} alt="changeInfo" />
                                 </>
                             )}
                         </li>
@@ -108,6 +174,11 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
                             className='text-xl px-8 py-[6px] text-white bg-medium-blue'
                         >{t('SaveChanges')}
                         </button>
+
+                        {isAdminUser && (
+                            <Link to="/admin-panel" className='text-xl px-8 py-[6px] text-white bg-medium-blue'>{t('AdminPanel')}</Link>
+                        )}
+
                         <Link className='text-xl px-8 py-[6px] text-white bg-medium-blue' to={`/login`} onClick={handleLogOut}>{t('LogOut')}</Link>
                     </div>
 
@@ -117,10 +188,7 @@ const UserProfile = ({ user, showMenu, setShowMenu }) => {
 
 
         </section>
-
-
-
-    )
-}
+    );
+});
 
 export default UserProfile

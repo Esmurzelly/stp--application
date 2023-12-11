@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .modal__window {
+    @apply bg-white shadow-upShadow py-2 flex flex-col fixed bottom-0 left-0 z-50 w-full text-center;
+  }
+
+  .validate__error {
+    @apply text-red-600 text-xs flex gap-2;
+  }
+}
+
 @import 'leaflet/dist/leaflet.css';
 
 .leaflet-bottom,

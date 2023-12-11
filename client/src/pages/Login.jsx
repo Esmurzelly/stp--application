@@ -15,7 +15,8 @@ import { useTranslation } from 'react-i18next';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
 import logo from '../assets/main/Logo.svg';
-import ChangeLanguage from '../components/ChangeLanguage';
+import { ChangeLanguage } from '../components';
+import InputComponent from '../components/InputComponent';
 
 const Login = () => {
     const {
@@ -43,7 +44,9 @@ const Login = () => {
         }
     }, [status, isAuth, navigate]);
 
-    const handleSubmitForm = () => {
+    const handleSubmitForm = (e) => {
+        e.preventDefault();
+
         try {
             dispatch(loginUser({ email, password }));
         } catch (error) {
@@ -66,48 +69,41 @@ const Login = () => {
                     onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                             e.preventDefault();
-                            handleSubmit(handleSubmitForm());
+                            handleSubmit(handleSubmitForm(e));
                         }
                     }}
 
                     className='flex flex-col items-center gap-7'
-                    onSubmit={handleSubmit(handleSubmitForm)}
+                    onSubmit={(e) => handleSubmit(handleSubmitForm(e))}
                 >
                     <h1>{t('Authorization')}</h1>
 
                     <div className="flex flex-col gap-9 mt-8">
-                        <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
-                            <input
-                                {...register("email", {
-                                    required: true,
-                                    maxLength: 99,
-                                })}
-                                className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
-                                type="email"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                                placeholder={t('Email')}
-                            />
-                            {errors?.email?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t('RequiredError')} </p>}
-                            {errors?.email?.type === "maxLength" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t('EmailError')} </p>}
-                        </div>
+                        <InputComponent
+                            type="email"
+                            placeholder={t('Email')}
+                            name="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            register={register}
+                            error={errors?.email?.type}
+                            required={true}
+                            maxLength={99}
+                            autoComplete={'on'}
+                        />
 
-                        <div className='border border-b-[2px] border-t-0 border-l-0 border-r-0 border-b-gray-200'>
-                            <input
-                                {...register("password", {
-                                    required: true,
-                                })}
-                                className='placeholder:text-light-gray placeholder:text-xl placeholder:text-center placeholder:opacity-40 focus:outline-none'
-                                type="password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                placeholder={t('Password')}
-                            />
-                            {errors?.password?.type === "required" && <p className='text-red-600 text-xs flex gap-2'><ExclamationTriangleIcon width={12} /> {t('RequiredError')} </p>}
-                        </div>
-
+                        <InputComponent
+                            type="password"
+                            placeholder={t('Password')}
+                            name="password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            register={register}
+                            error={errors?.password?.type}
+                            required={true}
+                            autoComplete={'on'}
+                        />
                     </div>
-
 
                     <div className="flex flex-col gap-3">
                         <Link
@@ -119,7 +115,6 @@ const Login = () => {
                         <button
                             className='text-xl px-8 py-[6px] text-white bg-medium-blue'
                             type='submit'
-                            onClick={handleSubmit(handleSubmitForm)}
                         >
                             {t('Enter')}
                         </button>

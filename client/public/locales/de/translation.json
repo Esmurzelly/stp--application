@@ -22,6 +22,7 @@
     "EnterCity": "Geben Sie eine neue Stadt ein",
     "SaveChanges": "Änderungen speichern",
     "LogOut": "Abmelden",
+    "AdminPanel": "Admin-Panel",
 
     "YourLocation": "Ihr Standort",
     "Report": "Gefahr melden",
@@ -32,11 +33,11 @@
     "CarIncident": "Unfall",
     "WhereIsDangerous": "Wie viele Meter von Ihnen entfernt ist Gefahr?",
     "DesctibeWhatYouveSeen": "Beschreiben Sie, was Ihnen aufgefallen ist",
+    "NoDescription": "Keine Beschreibung",
 
-    "oneMarker": "Marker in der Nähe",
-    "twoMarkers": "Marker nebeneinander",
-    "threeMarker3": "Marker nebeneinander",
+    "MarksNumber": "Markierungen in der Nähe:",
     "NoMarkers": "Es sind keine Markierungen in der Nähe",
+    "AddImage": "Bild hinzufügen",
 
     "Category": "Kategorie",
     "Description": "Beschreibung",

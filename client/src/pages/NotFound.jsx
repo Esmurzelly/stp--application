@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import logo from '../assets/main/Logo.svg';
 import back from '../assets/main/back.svg';
 import pageError from '../assets/main/pageError.svg';
-import ChangeLanguage from '../components/ChangeLanguage';
+import { ChangeLanguage } from '../components';
 
 import { useTranslation } from 'react-i18next';
 

@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
-import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -19,7 +18,7 @@ dotenv.config();
 const PORT = process.env.PORT || 3001;
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
-const DB_NAME = DB_PASSWORD.DB_NAME;
+const DB_NAME = process.env.DB_NAME;
 
 const corsOptions = {
   origin: 'http://localhost:3000',
@@ -28,11 +27,12 @@ const corsOptions = {
   credentials: true,
 };
 
+
 app.use(cors(corsOptions));
 app.use(fileUpload());
 app.use(express.json());
-app.use(express.static('uploads'));
-app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+app.use(express.static('static'));
+app.use("/static", express.static(path.join(__dirname, "static")));
 
 app.use('/api/auth', authRoute);
 app.use('/api/markers', markersRoute);
@@ -40,12 +40,8 @@ app.use('/api/markers', markersRoute);
 const start = async () => {
   try {
     await mongoose.connect(
-      `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.u8hbaei.mongodb.net/stp?retryWrites=true&w=majority`
+      `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.u8hbaei.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
     );
-
-    // app.get('/auth/login', (req, res) => {
-    //   res.send('register - hello adam');
-    // });
 
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
   } catch (error) {
