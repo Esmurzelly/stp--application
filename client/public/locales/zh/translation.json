@@ -13,6 +13,7 @@
     "Oops": "哎呀......",
     "NotExisted": "看来该页面不存在或已被删除...",
     "LoadingData": "正在加载数据...",
+    "TurnOffDeny": "在使用该服务之前，请先取消发送地理定位的禁令!",
 
     "YouLeftFromAccount": "您已离开帐户",
     "Profile": "个人资料",

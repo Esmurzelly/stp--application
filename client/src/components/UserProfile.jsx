@@ -30,7 +30,8 @@ const UserProfile = React.memo(({ showMenu, setShowMenu }) => {
     const [email, setEmail] = useState(user.email);
     const [city, setCity] = useState(user.city);
 
-    const userAvatarPhoto = user.avatar === null || user.avatar === '' ? avatar_registration : `http://localhost:3001/static/userAvatar/${user.avatar}`;
+    // const userAvatarPhoto = user.avatar === null || user.avatar === '' ? avatar_registration : `https://besafeapp.ru/static/userAvatar/${user.avatar}`;
+    const userAvatarPhoto = user.avatar === null || user.avatar === '' ? avatar_registration : `${process.env.REACT_APP_REQUEST_AVATAR}/${user.avatar}`;
 
     const [changeClickFullName, setChangeClickFullName] = useState(false);
     const [changeClickEmail, setChangeClickEmail] = useState(false);
@@ -57,7 +58,9 @@ const UserProfile = React.memo(({ showMenu, setShowMenu }) => {
         };
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
         const updatedProfile = {
             fullName,
             email,
@@ -72,6 +75,10 @@ const UserProfile = React.memo(({ showMenu, setShowMenu }) => {
 
             dispatch(uploadAvatar(formData));
         }
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     };
 
     const handleLogOut = () => {

@@ -91,6 +91,7 @@ export const uploadAvatar = createAsyncThunk(
             return response.data;
         } catch (error) {
             console.error('Error:', error);
+            throw error;
         }
     }
 );

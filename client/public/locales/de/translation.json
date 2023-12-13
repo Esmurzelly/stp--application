@@ -13,6 +13,7 @@
     "Oops": "Ups...",
     "NotExisted": "Es scheint, dass diese Seite nicht existiert oder gelöscht wurde...",
     "LoadingData": "Daten werden geladen...",
+    "TurnOffDeny": "Bitte deaktivieren Sie vor der Nutzung des Dienstes das Verbot der Geolokalisierung!",
 
     "YouLeftFromAccount": "Sie sind von Ihrem Konto abgemeldet",
     "Profile": "Profil",

@@ -13,6 +13,7 @@
     "Oops": "앗...",
     "NotExisted": "이 페이지가 존재하지 않거나 삭제된 것 같습니다...",
     "LoadingData": "데이터 로드 중...",
+    "TurnOffDeny": "서비스를 사용하기 전에 지리적 위치 전송 금지를 비활성화하십시오!",
 
     "YouLeftFromAccount": "당신은 계정을 떠났습니다",
     "Profile": "프로필",
