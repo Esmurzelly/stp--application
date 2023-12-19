@@ -15,13 +15,14 @@ import myGeo from '../assets/main/myGeo.svg';
 import showMarkers from '../assets/main/showMarkers.svg';
 import LoaderComponent from './LoaderComponent';
 
+import Loader from '@trendmicro/react-loader';
+import '@trendmicro/react-loader/dist/react-loader.css';
+
 
 const Map = React.memo(({ userLocation, selectedMarkerPosition, setOpenModal }) => {
     const dispatch = useDispatch();
-    const { currentMarkers } = useSelector(state => state.markers);
+    const { currentMarkers, loading } = useSelector(state => state.markers);
     const mapRef = useRef();
-
-    // console.log('currentMarkers', currentMarkers);
 
     const { t } = useTranslation();
 
@@ -38,7 +39,7 @@ const Map = React.memo(({ userLocation, selectedMarkerPosition, setOpenModal }) 
     }, [dispatch, fetchMarkers]);
 
 
-    // request each 1 second 
+    // request each 1 second - rejected
     // useEffect(() => {
     //     fetchMarkers();
 
@@ -87,6 +88,18 @@ const Map = React.memo(({ userLocation, selectedMarkerPosition, setOpenModal }) 
                     />
                 </div>
             </div>
+
+            {loading && (
+                <div className='w-full min-h-screen bg-slate-500 absolute z-50 opacity-80'>
+                    <p className='text-center w-full text-lg px-3 text-white absolute z-20 opacity-100 top-[15%]'>
+                        {t('LoadingNotReoload')}
+                    </p>
+                    <div className='absolute top-[25%] left-2/4'>
+                        <Loader size="md" className="component text-black"></Loader>
+                    </div>
+                </div>
+            )}
+
 
             <MapContainer ref={mapRef} center={userLocation || selectedMarkerPosition} zoom={13} className='z-10 min-h-screen w-full relative'>
                 <TileLayer

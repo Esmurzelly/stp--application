@@ -12,8 +12,6 @@ import { toast } from 'react-toastify';
 
 import { useTranslation } from 'react-i18next';
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-
 import logo from '../assets/main/Logo.svg';
 import { ChangeLanguage } from '../components';
 import InputComponent from '../components/InputComponent';
@@ -37,18 +35,24 @@ const Login = () => {
 
     useEffect(() => {
         try {
-            if (status) toast(status);
+            if (status) toast(status)
             if (isAuth) navigate('/');
         } catch (error) {
             console.log(`error in useEffect - ${error}`);
         }
     }, [status, isAuth, navigate]);
 
-    const handleSubmitForm = (e) => {
+    const handleSubmitForm = async (e) => {
         e.preventDefault();
+        if (!email || !password) return toast("Please fill all fields");
 
         try {
-            dispatch(loginUser({ email, password }));
+            const response = await dispatch(loginUser({ email, password }));
+
+            if (!response.payload) {
+                toast('wrong password or email');
+                return
+            }
         } catch (error) {
             console.log(`error in handleSubmit - ${error}`);
         }

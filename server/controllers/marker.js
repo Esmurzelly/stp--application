@@ -8,8 +8,6 @@ export const createMarker = async (req, res) => {
     try {
         const image = req?.files?.image;
         const MARKER_STORAGE=process.env.MARKER_STORAGE;
-        console.log('is it exist?', image)
-        // const marker = req.body;
         
         const { category, description, metres } = req.body;
         const position = JSON.parse(req.body.position);
@@ -38,13 +36,9 @@ export const createMarker = async (req, res) => {
 
             console.log('====================start====================')
             console.log({ category, description, position, metres, image }); 
-
             console.log('newMarker with image', newMarkerWithImage);
-            console.log('req.userId with image', req.userId);
-
-            console.log('req.files with image', req.files);
-            console.log('WITH IMAGE')
             console.log('====================end====================')
+
             res.json(newMarkerWithImage);
         } else {
             const newMarker = new Marker({
@@ -55,22 +49,15 @@ export const createMarker = async (req, res) => {
                 metres,
             });
 
-            
             await newMarker.save();
-            
             
             console.log('====================start====================')
             console.log({ category, description, position, metres }); 
-            console.log('NO IMAGE')
-            console.log('req.files no image', req.files);
             console.log('newMarker no image', newMarker);
-            console.log('req.userId no image', req.userId);
             console.log('====================end====================')
 
             res.json(newMarker);
         }
-
-        
     } catch (e) {
         res.status(500).json({ message: `Ошибка сервера - ${e.message}` });
     }

@@ -55,7 +55,7 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.json({
+      return res.status(401).json({
         message: 'This user does not exist',
       });
     }
@@ -63,7 +63,7 @@ export const login = async (req, res) => {
     const isPasswordCorrect = await bcrypt.compare(password, user.passwordHash);
 
     if (!isPasswordCorrect) {
-      return res.json({
+      return res.status(401).json({
         message: 'Incorrect password.',
       });
     }
@@ -76,13 +76,13 @@ export const login = async (req, res) => {
       { expiresIn: '30d' }
     );
 
-    res.json({
+    res.status(200).json({
       token,
       user,
       message: 'You are in the system!',
     });
   } catch (e) {
-    res.json({ message: `No access, error is ${e}` });
+    res.status(500).json({ message: `No access, error is ${e}` });
   }
 };
 

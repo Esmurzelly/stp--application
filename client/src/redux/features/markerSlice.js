@@ -45,6 +45,7 @@ export const removeMarker = createAsyncThunk(
   async id => {
     try {
       const { data } = await axios.delete(`/markers/${id}`, id);
+      
       return data;
     } catch (error) {
       console.log(error);
@@ -89,9 +90,15 @@ export const markerSlice = createSlice({
     },
     [removeMarker.fulfilled]: (state, action) => {
       state.loading = false;
-      state.markers = state.markers.filter(
-        marker => marker._id !== action.payload._id
-      );
+      const deletedMarkerId = action.payload;
+
+      if (deletedMarkerId) {
+        state.markers = state.markers.filter(
+          marker => marker._id !== deletedMarkerId
+        );
+      } else {
+        console.error('No valid data received after marker deletion.');
+      }
     },
   },
 });

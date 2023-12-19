@@ -14,6 +14,7 @@
     "NotExisted": "It appears that this page does not exist or has been deleted...",
     "LoadingData": "Loading data...",
     "TurnOffDeny": "Before using the service, please disable the ban on sending geolocation!",
+    "LoadingNotReoload": "Operation in progress, please do not reload the page",
 
     "YouLeftFromAccount": "You have left your account",
     "Profile": "Profile",

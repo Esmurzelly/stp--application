@@ -1,3 +1,4 @@
 node_modules/
 .env
-static/
+static/markerName/*
+static/userAvatar/*

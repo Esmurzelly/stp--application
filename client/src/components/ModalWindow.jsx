@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 
 import { useDispatch } from 'react-redux';
-import { createMarker } from '../redux/features/markerSlice';
+import { createMarker, getAllMarkers } from '../redux/features/markerSlice';
 
 import { useTranslation } from 'react-i18next';
 
@@ -46,9 +46,8 @@ const ModalWindow = ({ userLocation }) => {
         };
     };
 
-    const submitHandler = (e) => {
-        e.preventDefault();
 
+    const submitHandler = async () => {
         try {
             const data = new FormData();
             data.append('category', category);
@@ -59,22 +58,20 @@ const ModalWindow = ({ userLocation }) => {
                 data.append('image', selectedFile);
             }
 
+            if (!category || !metresWindow) {
+                alert('Choose category and metresWindow');
+                return
+            }
+
             // console.log('Data to be sent:', Object.fromEntries(data.entries()));
-            dispatch(createMarker(data));
+            await dispatch(createMarker(data));
 
-            setSelectedFile(null);
-
-            setCategory('');
-            setDescription('');
-            setMetresWindow();
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            await dispatch(getAllMarkers());
         } catch (error) {
             console.log(`send error - ${error}`);
         }
     };
+
 
     return (
         <div>

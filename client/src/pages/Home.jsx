@@ -21,6 +21,7 @@ const Home = React.memo(() => {
     const [hideModalWindow, setHideModalWindow] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
+
     const { t } = useTranslation();
 
     const handleMarkerClick = (position) => {
@@ -35,7 +36,7 @@ const Home = React.memo(() => {
         <div className="min-h-screen">
             {!hideModalWindow ? (
                 <div className='modal__window h-[300px] phone_md:h-[362px]'>
-                    <div className='w-full flex justify-center' onClick={() => setHideModalWindow(true)}>
+                    <div className='w-full flex justify-center items-center' onClick={() => setHideModalWindow(true)}>
                         <ChevronDownIcon className='w-4 h-4 cursor-pointer' />
                     </div>
                     {openModal ? (

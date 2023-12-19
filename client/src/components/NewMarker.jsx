@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { removeMarker } from '../redux/features/markerSlice';
+import { getAllMarkers, removeMarker } from '../redux/features/markerSlice';
 
 import L from 'leaflet';
 import { Popup, Circle, LayersControl, FeatureGroup, Marker } from 'react-leaflet';
@@ -17,11 +17,14 @@ import yellowMarker from '../assets/markers/yellow_marker.svg';
 import Moment from 'react-moment';
 
 import { useTranslation } from 'react-i18next';
+import ImageModal from './ImageModal';
 
 const NewMarker = ({ _id, category, description, position, metres, author, createdAt, image }) => {
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.auth);
+
     const [isFront, setIsFront] = useState(false);
+    const [showImageModal, setShowImageModal] = useState(false);
 
     const { t, i18n } = useTranslation();
     const currentLanguage = i18n.language;
@@ -55,10 +58,9 @@ const NewMarker = ({ _id, category, description, position, metres, author, creat
             const response = await axios.delete(`/markers/${_id}`);
 
             if (response.status === 200) {
-                dispatch(removeMarker(_id))
+                dispatch(removeMarker(_id));
+                dispatch(getAllMarkers());
             }
-
-            window.location.reload();
         } catch (error) {
             if (error.response && error.response.status === 403) {
                 console.error("You are not authorized to delete this marker");
@@ -71,6 +73,10 @@ const NewMarker = ({ _id, category, description, position, metres, author, creat
     const handleMarkerClick = () => {
         setIsFront(true);
     };
+
+    const onClickImageModal = () => {
+        setShowImageModal(!showImageModal);
+    }
 
     return (
         <LayersControl.Overlay
@@ -97,7 +103,11 @@ const NewMarker = ({ _id, category, description, position, metres, author, creat
 
 
                         {image && (
-                            <img className='w-24' src={`${process.env.REACT_APP_REQUEST_IMAGE}/${image}`} alt="request__image" />
+                            <ImageModal
+                                image={`${process.env.REACT_APP_REQUEST_IMAGE}/${image}`}
+                                showImageModal={showImageModal}
+                                onClick={onClickImageModal}
+                            />
                         )}
 
                         {user && user._id === author && (
