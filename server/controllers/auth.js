@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
+import nodemailer from 'nodemailer';
 
 
 export const register = async (req, res) => {
@@ -100,7 +101,7 @@ export const getMe = async (req, res) => {
       },
       process.env.JWT_SECRET,
       { expiresIn: '30d' }
-    ); 
+    );
 
     res.json({
       user,
@@ -138,8 +139,8 @@ export const editProfile = async (req, res) => {
 }
 
 export const uploadAvatar = async (req, res) => {
-  const IMAGE_STORAGE=process.env.IMAGE_STORAGE;
-  
+  const IMAGE_STORAGE = process.env.IMAGE_STORAGE;
+
   try {
     const file = req.files.file;
     const user = await User.findById(req.userId);
@@ -147,14 +148,14 @@ export const uploadAvatar = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     const avatarName = uuidv4() + '.jpg';
     file.mv(`${IMAGE_STORAGE}` + avatarName);
     user.avatar = avatarName;
     await user.save();
 
     console.log('user id', user)
-    
+
     return res.json(user);
   } catch (error) {
     console.error('Error:', error);
@@ -163,8 +164,8 @@ export const uploadAvatar = async (req, res) => {
 }
 
 export const deleteAvatar = async (req, res) => {
-  const IMAGE_STORAGE=process.env.IMAGE_STORAGE;
-  
+  const IMAGE_STORAGE = process.env.IMAGE_STORAGE;
+
   try {
     const user = await User.findById(req.userId);
 
@@ -179,6 +180,56 @@ export const deleteAvatar = async (req, res) => {
     return res.json(user);
   } catch (error) {
     console.error('Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+export const sendEmail = (req, res) => {
+  const contactEmail = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.REACT_APP_EMAIL,
+      pass: process.env.REACT_APP_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+  
+  contactEmail.verify(error => {
+    if (error) {
+      console.log('server error email', error);
+    } else {
+      console.log('ready to send');
+    }
+  });
+
+  try {
+    const name = req.body.fullName;
+    const email = req.body.email;
+    const message = req.body.message;
+
+    const mail = {
+      from: name,
+      to: process.env.REACT_APP_EMAIL,
+      subject: `New Message From ${name}`,
+      html: `
+          <p>Name: ${name}</p>
+          <p>Email: ${email}</p>
+          <p>Message: ${message}</p>`
+    };
+
+    contactEmail.sendMail(mail, error => {
+      if (error) {
+        res.json(error);
+        console.log('error', res.json(error));
+      } else {
+        res.json({
+          code: 200, status: 'Message sent'
+        });
+      };
+    });
+  } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }

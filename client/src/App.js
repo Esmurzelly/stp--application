@@ -10,6 +10,7 @@ const Login = lazy(() => import(/* webpackChunkName: "Login" */ './pages/Login')
 const Registration = lazy(() => import(/* webpackChunkName: "Registration" */ './pages/Registration'));
 const AdminPanel = lazy(() => import(/* webpackChunkName: "AdminPanel" */ './pages/AdminPanel'));
 const NotFound = lazy(() => import(/* webpackChunkName: "NotFound" */ './pages/NotFound'));
+const LandingPage = lazy(() => import(/* webpackChunkName: "NotFound" */ './pages/LandingPage'));
 
 function App() {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ function App() {
           path="/"
           element={
             <Suspense fallback={<LoaderComponent />}>
-              <Login />
+              <LandingPage />
             </Suspense>
           }
         />

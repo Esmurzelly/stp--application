@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, getMe, editProfile, uploadAvatar, deleteAvatar } from '../controllers/auth.js';
+import { register, login, getMe, editProfile, uploadAvatar, deleteAvatar, sendEmail } from '../controllers/auth.js';
 import { checkAuth } from '../utils/checkAuth.js';
 
 const router = new Router();
@@ -24,5 +24,8 @@ router.post('/avatar', checkAuth, uploadAvatar)
 
 // avatar delete
 router.delete('/avatar', checkAuth, deleteAvatar) 
+
+// sending email
+router.post('/contact', sendEmail) 
 
 export default router;
