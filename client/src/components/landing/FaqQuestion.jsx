@@ -8,7 +8,7 @@ const FaqQuestion = ({ question, answer }) => {
         setShowAnswer(!showAnswer);
     }
     return (
-        <div className='w-full mt-2'>
+        <div className='w-full mt-2 cursor-pointer'>
             <div onClick={() => handleShowAnswer()} className={`w-full flex flex-row justify-between items-start py-3 px-4 ${showAnswer ? "rounded-t-lg" : ""} bg-gradient-to-r from-[#B1E3FF] to-[#DFBEFF]`}>
                 <h3 className='text-base text-landing-faq-question basis-4/5'>{question}</h3>
 
