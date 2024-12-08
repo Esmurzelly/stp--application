@@ -47,9 +47,9 @@ Other libraries: __axios__ + __framer-motion__ + __i18next__ + __moment__ + __no
 1. User can Log In or Registrate his/her account
 2. User must follow input rules for valid characters
 
-![image3](./client/public/readmeImage/markdownImage3.png)
+![image3](./client/public/readmeImage/markdownImage4.jpg)
 
-1. User's location
+1. User's location (blue point)
 2. Button which moves user to his location smoothly
 3. Button for watching other crimes around user
 4. Modal Window for making report
@@ -57,6 +57,8 @@ Other libraries: __axios__ + __framer-motion__ + __i18next__ + __moment__ + __no
 6. Distance from user to crime
 7. Add image to Mark / Report
 8. Field for descripton (and button for sending request)
+9. Clicked Mark with whole needed info (user also can delete Mark and make photo bigger)
+10. Ordinary Marker
 
 Feature 
 : User's location is gotten by __leaflet__ library and inner browser location feature
