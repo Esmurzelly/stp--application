@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://besafeapp.ru/api'
-    // baseURL: 'http://localhost:3001/api'
+    // baseURL: 'https://besafeapp.ru/api'
+    baseURL: 'http://localhost:3001/api'
 });
 
 instance.interceptors.request.use(config => {
